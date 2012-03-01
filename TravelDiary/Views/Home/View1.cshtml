@@ -1,0 +1,44 @@
+﻿@model Diary.Models.Reply
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View1</title>
+</head>
+<body>
+    <fieldset>
+        <legend>Reply</legend>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.DateStamp)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.DateStamp)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Text)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Text)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Name)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Name)
+        </div>
+    </fieldset>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

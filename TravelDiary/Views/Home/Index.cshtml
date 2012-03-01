@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Diary.Models.DayStory>
+
+@{
+    ViewBag.Title = "List";
+    int counter = 1;
+    
+    //http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/stepping-out-with-bootstrap-from-twitter/
+}
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('.linkBox').toggle(
+           function () {
+            var dateId = $(this).children(".sDate").html();
+            $(this).next("div").show("fast");
+            $(this).next(".subContent").load("/home/Details/" + dateId);
+        }, function() {
+            $(this).next("div").hide("slow");
+      });
+
+    
+        $('.selectorClass').hover(function () {
+	        $(this).stop().fadeTo('fast', 0.4);
+	    }, function () {
+	        $(this).stop().fadeTo('slow', 1);
+	    });
+    });
+    
+</script>
+
+<div class="mainContent">
+@foreach (var item in Model) {
+    var divId = "content" + @counter;
+    var itemId = @Html.DisplayFor(model => item.Day);
+        <div class="selectorClass linkBox"><span class="sDate">@Html.DisplayFor(model => item.Day)</span><span>, @Html.DisplayFor(model => item.Header), @counter</span></div>
+        <div class="subContent" style="display:none;"></div>
+    counter ++;
+}
+</div>
