@@ -1,18 +1,20 @@
-blockqoute
-{
-    font-size: .95em;
-    font-family: "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
-    color: #232323;
+
+
+body {
+    margin: 0; 
+    padding: 0;
+    background-image:url('../Images/ny3vcpg.png');
 }
 
-.mainContent {
-    padding: 5px;
-    margin: 5px;
-}
 
-.subContent {
-    padding: 5px;
-    margin: 5px;
+div.bodyDiv {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1250px;
+    text-align: center; 
+    border: 1px solid #999; 
+    background-color: #fff;
 }
 
 header,
@@ -22,6 +24,25 @@ section {
     display: block;
 }
 
+.footer {
+    text-align:right;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.details {
+    text-align: left; 
+}
+
+.mainContent {
+    padding: 5px;
+    margin: 5px;
+}
+
+.subContent {
+    padding: 0px;
+    margin: 0px;
+}
 
 h1, h2, h3, h4, h5, h6
 {
@@ -106,7 +127,14 @@ textarea, input
 {
     height: 70px;
     width: 100px;
-    border: 1px solid black;
+    border: 1px solid #ccc; 
+}
+
+.tinyImg
+{
+    height: 28px;
+    width: 40px;
+    border: 1px solid #ccc; 
 }
 
 .dayLink 

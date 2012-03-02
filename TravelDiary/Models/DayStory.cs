@@ -11,6 +11,7 @@ namespace Diary.Models
         public string Day { get; set; }
         public string Header { get; set; }
         public string Text { get; set; }
+        public string Img { get; set; }
         
         public List<Image> Images  { get; set; }
         public List<Reply> Comments  { get; set; }
@@ -22,8 +23,9 @@ namespace Diary.Models
                 var sPath = AppDomain.CurrentDomain.BaseDirectory + "Upload\\" + date;
                 var diaryText = TextFile.ReadFile(sPath + "\\main.txt");
                 var header = diaryText.Substring(4, diaryText.IndexOf("-->") - 4);
+                var im = Image.GetAllImages(sPath, date)[0].Name;
                 //diaryText = diaryText.Replace("\r\n", "<br>").Replace("\r", "<br>").Replace("\n", "<br>");
-                d = new DayStory {Header = header, Day = date, Text = diaryText, Comments = Reply.GetReplies(sPath), Images = Image.GetAllImages(sPath, date)};
+                d = new DayStory {Header = header, Day = date, Img = im, Text = diaryText, Comments = Reply.GetReplies(sPath), Images = Image.GetAllImages(sPath, date)};
             }
             catch (Exception ex) {
                 throw ex;
