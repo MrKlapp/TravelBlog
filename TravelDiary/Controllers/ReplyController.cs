@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Diary.Models;
 
-namespace TravelDiary.Controllers
+namespace Diary.Controllers
 {
     public class ReplyController : Controller
     {
@@ -21,7 +21,6 @@ namespace TravelDiary.Controllers
         {
             var r = new Reply();
             r.Create(comment, from, day);
-
             return Redirect("/");
         }
     }

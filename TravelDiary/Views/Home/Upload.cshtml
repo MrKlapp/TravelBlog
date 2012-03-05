@@ -1,0 +1,164 @@
+﻿@model Diary.Models.DayStory
+@{
+    ViewBag.Title = "Upload";
+    
+    var item = Model;
+    var day = @Html.DisplayFor(model => item.Day);
+    var imgPath = "../../Upload/"+day+"/thumbnails/";
+}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.2/mootools.js"></script>
+<script src="@Url.Content("~/Content/Scripts/fancyupload/source/Fx.ProgressBar.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/Scripts/fancyupload/source/Swiff.Uploader.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/Scripts/fancyupload/source/FancyUpload3.Attach.js")" type="text/javascript"></script>
+
+<style type="text/css">
+    #img-list {
+	    padding: 0;
+	    list-style: none;
+	    margin: 0;
+    }
+
+    #img-upload-div {
+        width: 400px;
+    }
+
+    #img-list .file-invalid {
+	    cursor: pointer;
+	    color: #514721;
+	    padding-left: 48px;
+	    line-height: 24px;
+	    background: url(../../Content/Scripts/fancyupload/assets/error.png) no-repeat 24px 5px;
+	    margin-bottom: 1px;
+    }
+    #img-list .file-invalid span {
+	    background-color: #fff6bf;
+	    padding: 1px;
+    }
+
+    #img-list .file {
+	    line-height: 2em;
+	    padding-left: 22px;
+	    /*background: url(../Scripts/fancyupload/assets/attach.png) no-repeat 1px 50%;*/
+    }
+
+    #img-list .file span,
+    #img-list .file a {
+	    padding: 0 4px;
+    }
+
+    #img-list .file .file-size {
+	    color: #666;
+    }
+
+    #img-list .file .file-error {
+	    color: #8a1f11;
+    }
+
+    #img-list .file .file-progress {
+	    width: 125px;
+	    height: 12px;
+	    vertical-align: middle;
+	    background-image: url(../../Content/Scripts/fancyupload/assets/progress-bar/progress.gif);
+    }
+</style>
+
+<script type="text/javascript">
+
+    window.addEvent('domready', function () {
+
+        /**
+        * Uploader instance
+        */
+        var up = new FancyUpload3.Attach('img-list', '#img-attach, #img-attach-2', {
+            path: '../../Content/Scripts/fancyupload/source/Swiff.Uploader.swf',
+            url: '/Upload/UploadFile/@day',
+            fileSizeMax: 4 * 1024 * 1024,
+
+            verbose: false,
+
+            onSelectFail: function (files) {
+                files.each(function (file) {
+                    new Element('li', {
+                        'class': 'file-invalid',
+                        events: {
+                            click: function () {
+                                this.destroy();
+                            }
+                        }
+                    }).adopt(
+					new Element('span', { html: file.validationErrorMessage || file.validationError })
+				).inject(this.list, 'bottom');
+                }, this);
+            },
+
+            onFileSuccess: function (file) {
+                //new Element('input', { type: 'checkbox', 'checked': true }).inject(file.ui.element, 'top');
+                new Element('img', { src: '@imgPath' + file.name }).inject(file.ui.element, 'top');
+                //console.log(response);
+                //file.ui.element.highlight('#e6efc2');
+            },
+
+            onFileError: function (file) {
+                file.ui.cancel.set('html', 'Retry').removeEvents().addEvent('click', function () {
+                    file.requeue();
+                    return false;
+                });
+
+                new Element('span', {
+                    html: file.errorMessage,
+                    'class': 'file-error'
+                }).inject(file.ui.cancel, 'after');
+            },
+
+            onFileRequeue: function (file) {
+                file.ui.element.getElement('.file-error').destroy();
+
+                file.ui.cancel.set('html', 'Cancel').removeEvents().addEvent('click', function () {
+                    file.remove();
+                    return false;
+                });
+
+                this.start();
+            }
+
+        });
+
+    });
+
+    function Delete(img) {
+        alert('/Home/DeleteDay/' + img);
+        $.get('/Home/DeleteDay/' + img);        
+    }
+ 
+</script>
+
+<div id="img-upload-div">
+<strong>Ladda upp bilder till @day</strong><br />
+<br />
+    <a href="#" id="img-attach">Klicka här för att ladda upp bilder</a>
+    <ul id="img-list"></ul>
+    <a href="#" id="img-attach-2" style="display: none;">Klicka här för att ladda upp fler bilder</a>
+</div>
+<hr />
+    <div class="images details mainContent">
+         <form class="form-stacked" method="post" action="/Upload/SaveComments/@day">
+         <a href="/Home/Upload/@day" class="btn btn-info" id="reload">Ladda om sida</a>
+         <button class="btn btn-info">Spara och gå vidare</button>
+         <br /><br />
+            <strong>Uppladdade bilder</strong><br />
+                @if (item != null && item.Images != null)
+                {    
+                    foreach (var img in item.Images)
+                     {
+                        <div style="display:inline-block;" id="@Html.DisplayFor(modelItem => img.Name)">
+                            <img src="@Html.DisplayFor(modelItem => img.Thumb)" alt="@Html.DisplayFor(modelItem => img.Comment)" title="@Html.DisplayFor(modelItem => img.Comment)" class="thumb rounded-corners10" />
+                            <a href="/Home/DeleteDay/@Html.DisplayFor(modelItem => img.Name)"><img src="../../Content/Images/DeleteRed.png" /></a><br />
+                            <input type="text" value="@Html.DisplayFor(modelItem => img.Comment)" class="input-medium" name="@Html.DisplayFor(modelItem => img.Name)" />
+                        </div>
+                     }
+                }
+        </form>
+    </div>
+    <div id="delete"></div>
+
+

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using RiaLibrary.Web;
 
-namespace TravelDiary
+namespace Diary
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -21,6 +22,9 @@ namespace TravelDiary
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapRoutes(); // Register Attribute Based Routes which the current assembly contains
+
+            //routes.MapRoute("Day", "Day", new { controller = "Home", action = "Day" });
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
