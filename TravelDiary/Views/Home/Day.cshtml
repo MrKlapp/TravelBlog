@@ -1,8 +1,11 @@
-﻿
+﻿@model Diary.Models.DayStory
 @{
-    ViewBag.Title = "Day";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Details";
+    
+    var item = Model;
+    var day = @Html.DisplayFor(model => item.Day);
 }
+
 <link href="@Url.Content("~/Content/CSS/themes/start/jquery-ui-1.8.18.custom.css")" rel="stylesheet" type="text/css" />
 <script src="@Url.Content("~/Content/Scripts/tinymce/tiny_mce.js")" type="text/javascript"></script>
 <script type="text/javascript" >
@@ -27,11 +30,11 @@
 
 <div class="row">
     <div class="span7 mainContent">
-     <form  method="post" action="Day/SaveDay" class="well" style="height:300px;">
-        <div class="clearfix" style="float:left;"><label style="text-align:left;">Datum<input type="text" name="day" id="datepicker" class="input-small" /></label></div>
-        <div class="clearfix" style="float:left;"><label style="text-align:left;">Rubrik<input type="text" value="" name="header" class="input-xlarge" id="header" /></label></div>
+     <form  method="post" action="/Day/SaveDay" class="well" style="height:300px;">
+        <div class="clearfix" style="float:left;"><label style="text-align:left;">Datum<input type="text" name="day" id="datepicker" value="@Html.DisplayFor(model => item.Day)" class="input-small" /></label></div>
+        <div class="clearfix" style="float:left;"><label style="text-align:left;">Rubrik<input type="text" value="@Html.DisplayFor(model => item.Header)" name="header" class="input-xlarge" id="header" /></label></div>
         <br />
-        <textarea name="body" style="width:500px;height:200px;" id="body"></textarea>
+        <textarea name="body" style="width:500px;height:200px;" id="body">@Html.Raw(HttpUtility.HtmlDecode(item.Text))</textarea>
         <br />
         <div class="clearfix" style="float:left;"><button class="btn">Spara</button></div>
     </form>

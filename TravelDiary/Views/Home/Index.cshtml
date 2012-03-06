@@ -33,7 +33,7 @@
         @foreach (var item in Model) {
             var divId = "content" + @counter;
             var itemId = @Html.DisplayFor(model => item.Day);
-                <div class="selectorClass linkBox boxStyle"><span class="sImg"><img src="@Html.DisplayFor(model => item.Img)" class="tinyImg rounded-corners5" alt="" /></span> <span class="sDate">@Html.DisplayFor(model => item.Day)</span><span class="sHeader">, @Html.DisplayFor(model => item.Header), @counter</span></div>
+                <div class="selectorClass linkBox boxStyle"><span class="sImg"><img src="@Html.DisplayFor(model => item.Img)" class="tinyImg rounded-corners5" alt="" /></span> <span class="sDate">@Html.DisplayFor(model => item.Day)</span><span class="sHeader">, @Html.DisplayFor(model => item.Header)</span></div>
                 <div class="subContent rounded-corners10 mainwrapper" style="display:none;"></div>
             counter ++;
         }
@@ -42,7 +42,7 @@
         @foreach (var item in Model) {
             var divId = "content" + @counter;
             var itemId = @Html.DisplayFor(model => item.Day);
-                <div class="selectorClass linkBox boxStyle2"><span class="sImg"><img src="@Html.DisplayFor(model => item.Img)" class="tinyImg rounded-corners5" alt="" /></span> <span class="sDate">@Html.DisplayFor(model => item.Day)</span><span class="sHeader">, @Html.DisplayFor(model => item.Header), @counter</span></div>
+                <div class="selectorClass linkBox boxStyle2"><span class="sImg"><img src="@Html.DisplayFor(model => item.Img)" class="tinyImg rounded-corners5" alt="" /></span> <span class="sDate">@Html.DisplayFor(model => item.Day)</span><span class="sHeader">, @Html.DisplayFor(model => item.Header)</span></div>
                 <div class="subContent rounded-corners10 mainwrapper" style="display:none;"></div>
             counter ++;
         }

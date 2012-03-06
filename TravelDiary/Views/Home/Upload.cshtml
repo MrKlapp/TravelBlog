@@ -63,7 +63,7 @@
 </style>
 
 <script type="text/javascript">
-
+    jQuery.noConflict();
     window.addEvent('domready', function () {
 
         /**
@@ -123,13 +123,26 @@
 
         });
 
-    });
 
-    function Delete(img) {
-        alert('/Home/DeleteDay/' + img);
-        $.get('/Home/DeleteDay/' + img);        
+    });
+</script>
+
+    <script src="@Url.Content("~/Content/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+
+        jQuery.noConflict();
+
+    function Delete(id) {
+        if (confirm("Delete this?")) {
+            jQuery.post('/Upload/DeleteDay/' + id, { day: "@day", name: id }, function (data) {
+                jQuery("#" + id).hide("slow");
+            });
+        }
+        else {
+            return false;
+        }
     }
- 
+
 </script>
 
 <div id="img-upload-div">
@@ -143,20 +156,21 @@
     <div class="images details mainContent">
          <form class="form-stacked" method="post" action="/Upload/SaveComments/@day">
          <a href="/Home/Upload/@day" class="btn btn-info" id="reload">Ladda om sida</a>
-         <button class="btn btn-info">Spara och gå vidare</button>
          <br /><br />
             <strong>Uppladdade bilder</strong><br />
                 @if (item != null && item.Images != null)
                 {    
                     foreach (var img in item.Images)
                      {
-                        <div style="display:inline-block;" id="@Html.DisplayFor(modelItem => img.Name)">
+                        <div style="display:inline-block;" id="@Html.DisplayFor(modelItem => img.Name)" >
                             <img src="@Html.DisplayFor(modelItem => img.Thumb)" alt="@Html.DisplayFor(modelItem => img.Comment)" title="@Html.DisplayFor(modelItem => img.Comment)" class="thumb rounded-corners10" />
-                            <a href="/Home/DeleteDay/@Html.DisplayFor(modelItem => img.Name)"><img src="../../Content/Images/DeleteRed.png" /></a><br />
+                            <img src="../../Content/Images/DeleteRed.png" alt="Delete" style="cursor:pointer;" onclick="Delete('@Html.DisplayFor(modelItem => img.Name)');" /><br />
                             <input type="text" value="@Html.DisplayFor(modelItem => img.Comment)" class="input-medium" name="@Html.DisplayFor(modelItem => img.Name)" />
                         </div>
                      }
                 }
+                <br />                
+         <button class="btn btn-info">Spara kommentarer</button> <a href="/Home/Adm/" class="btn btn-info">Vidare --></a>
         </form>
     </div>
     <div id="delete"></div>

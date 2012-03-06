@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services;
 using Diary.Models;
 using Image = System.Drawing.Image;
 
@@ -16,6 +17,7 @@ namespace Models.Controllers
     public class UploadController : Controller
     {
         readonly string _imageRoot = AppDomain.CurrentDomain.BaseDirectory + "Upload\\";
+
 
         public ActionResult SaveComments(string id, FormCollection collection)
         {
@@ -29,6 +31,8 @@ namespace Models.Controllers
             }
             return Redirect("/Home/Upload/"+ id);
         }
+
+   
 
         public ActionResult UploadFile(string id)
         {
@@ -148,9 +152,21 @@ namespace Models.Controllers
 
         private void UpdateCommentFile(string file, string text)
         {
+            file = file.Replace("_____", ".");
             TextFile.DeleteFile(file);
             TextFile.CreateFile(file);
             TextFile.AppendToFile(file, text);
         }
+
+        [WebMethod]
+        public void DeleteDay(string day, string name)
+        {
+            var imageRoot = _imageRoot + day + "\\";
+            name = name.Replace("_____", ".");
+            TextFile.DeleteFile(imageRoot + name + ".txt");
+            System.IO.File.Delete(imageRoot + name);
+            System.IO.File.Delete(imageRoot + "thumbnails\\" + name);
+        }
+
     }
 }

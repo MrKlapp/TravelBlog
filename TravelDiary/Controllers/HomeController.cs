@@ -25,36 +25,21 @@ namespace Diary.Controllers
         
         public ActionResult Upload(string id)
         {
-            var d = DayStory.GetSingleDay(id);
-            return View(d);
-        }
-        
-        public ActionResult Day()
-        {
-            return View();
-        }
-        
-        [HttpPost, ValidateInput(false)]
-        public ActionResult SaveDay(FormCollection collection)
-        {
-            var d = new DayStory {Day = collection[0], Header = collection[1]};
-            d.Text = "<!--" + d.Header + "--> <br>" + collection[2];
-            
-            try {
-                DayStory.Save(d);
-                //return Redirect("Upload/" + d.Day);
-                return View("Upload", d);
-            }
-            catch(Exception ex) {
-                throw ex;
-            }
-            return View();
+            var d = DayStory.GetSingleDay(id) ?? new DayStory {Day = id};
+            return View("Upload", d);
         }
 
-        public ActionResult DeleteDay(string id)
+        public ActionResult Day(string id)
         {
-            Image.Delete(id);
-            return Redirect("/Home/Upload/"+ id);
+            var d = DayStory.GetSingleDay(id) ?? new DayStory {Day = id};
+            return View("Day", d);
+        }
+        
+        
+        public ActionResult Adm()
+        {
+            var d = new DayStory().GetAllDays();
+            return View(d);
         }
     }
 }

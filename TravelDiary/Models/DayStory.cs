@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Diary.Models
 {
@@ -61,6 +62,7 @@ namespace Diary.Models
             TextFile.CreateFile(sPath);
             TextFile.AppendToFile(sPath, d.Text);
         }
+       
     }
 
       public class myReverserClass : IComparer  {

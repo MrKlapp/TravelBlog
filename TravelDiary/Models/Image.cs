@@ -27,7 +27,7 @@ namespace Diary.Models
 
                 var img = new Image
                           {
-                              Name = fileInfo.Name,
+                              Name = fileInfo.Name.Replace(".","_____"),
                                   Url = "../../Upload/" + date + "/" + fileInfo.Name,
                                   Thumb = "../../Upload/" + date + "/thumbnails/" + fileInfo.Name,
                                   Comment = imageComment
@@ -37,13 +37,14 @@ namespace Diary.Models
             return l;
         }
 
-          public static void Delete(string name)
-          {
-              var imageRoot = AppDomain.CurrentDomain.BaseDirectory + "Upload\\";
-              TextFile.DeleteFile(imageRoot + name + ".txt");
-              File.Delete(imageRoot + name);
-              File.Delete(imageRoot + "thumbnails\\" + name);
-          }
+          //public static void Delete(string name)
+          //{
+          //    name = name.Replace("___", ".");
+          //    var imageRoot = AppDomain.CurrentDomain.BaseDirectory + "Upload\\";
+          //    TextFile.DeleteFile(imageRoot + name + ".txt");
+          //    File.Delete(imageRoot + name);
+          //    File.Delete(imageRoot + "thumbnails\\" + name);
+          //}
 
     }
 }
