@@ -66,11 +66,13 @@
                     <input type="hidden" class="type" id="@typeId" value="main" />
                      <table width="100%">
                         <tr>
-                            <td align="left" style="padding-left:200px;margin-left:200px;text-align:left;">
-                                <span class="sImg"><img src="@item.Img" class="tinyImg rounded-corners5" alt="" /></span> 
+                            <td align="left"><img src="../../Content/Images/Invisible.png" style="width:1px;height:38px;" /></td>    
+                            <td align="left" width="80%" style="padding-left:60px;margin-left:60px;text-align:left;">
+                                <span class="sImg" style="vertical-align:bottom;"><img src="@item.Img" class="tinyImg rounded-corners5" alt="" style="vertical-align:middle;" /></span> 
                                 <span id="@dateId" class="sDate">@Html.DisplayFor(model => item.Day)</span>
-                                <span class="sHeader">, @Html.DisplayFor(model => item.Header)</span>
+                                <span class="sHeader" style="padding-bottom:5px;"> @Html.DisplayFor(model => item.Header)</span>
                             </td>
+                            <td align="right" style="padding-right:10px;margin-right:10px;text-align:right;"><img src="../../Content/Images/ff.png" alt=">>" /></td>
                         </tr>
                     </table>
                     </div>
@@ -96,11 +98,13 @@
                     <input type="hidden" class="type" id="@typeId" value="noel" />
                     <table width="100%">
                         <tr>
-                            <td align="left" style="padding-left:90px;margin-left:90px;text-align:left;">
-                                <span class="sImg"><img src="@item.Img" class="tinyImg rounded-corners5" alt="" /></span> 
-                                <span id="@dateId" class="sDate">@Html.DisplayFor(model => item.Day)</span>
-                                <span class="sHeader">, @Html.DisplayFor(model => item.Header)</span>
+                            <td align="left" style="padding-left:0px;margin-left:0px;text-align:left;"><img src="../../Content/Images/Noel.png" alt="Noels hörna" /></td>                            
+                            <td align="left" width="70%" style="padding-left:20px;margin-left:20px;text-align:left;">
+                                <span class="sImg"><img src="@item.Img" class="tinyImg rounded-corners5" alt="" style="vertical-align:middle;" /></span> 
+                                <span id="@dateId" class="sDate" style="display:none;">@Html.DisplayFor(model => item.Day)</span>
+                                <span class="sHeader" style="padding-bottom:5px;">@Html.DisplayFor(model => item.Header)</span>
                             </td>
+                            <td align="right" style="padding-right:10px;margin-right:10px;text-align:right;"><img src="../../Content/Images/ff.png" alt=">>" /></td>
                         </tr>
                     </table>
                     </div>
