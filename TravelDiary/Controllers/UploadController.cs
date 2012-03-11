@@ -10,37 +10,45 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Services;
 using Diary.Models;
+using Diary.Models.Files;
+using TravelDiary.Models.Files;
 using Image = System.Drawing.Image;
 
 namespace Models.Controllers
 {
     public class UploadController : Controller
     {
-        readonly string _imageRoot = AppDomain.CurrentDomain.BaseDirectory + "Upload\\";
+        readonly string _imageRoot = ConfigurationManager.AppSettings["UploadUrl"];
 
-
-        public ActionResult SaveComments(string id, FormCollection collection)
+        public ActionResult SaveComments(string category, string id, FormCollection collection)
         {
-            var path = Path.Combine(_imageRoot, id);
-            path = string.Format("{0}\\", path);
+            //var path = Path.Combine(_imageRoot, b.Path + "\\" + id + "");
+            var path = string.Format("{0}{1}\\{2}\\", _imageRoot, category, id);
             foreach (var item in collection.AllKeys) {
                 var text = collection[item];
                 var fileUrl = path + item + ".txt";
                 UpdateCommentFile(fileUrl, text);
 
             }
-            return Redirect("/Home/Upload/"+ id);
+            return Redirect("/Home/UploadEdit/"+ category + "/" + id);
         }
 
-   
+        public ActionResult Day(BasePath b)
+            {
+                var d = DayStory.GetSingleDay(b) ?? new DayStory {Day = b.Date};
+                return View("Day", d);
+            }
 
-        public ActionResult UploadFile(string id)
+        public ActionResult UploadFile()
         {
             Image thumbnailImage = null;
             Image originalImage = null;
             Bitmap finalImage = null;
             Graphics graphic = null;
             MemoryStream ms = null;
+            
+            var c = Request["category"];
+            var id = Request["day"];
 
             if (id.Length == 0) {
                 return Redirect("/Home/Day/"+ DateTime.Now.ToShortDateString());
@@ -52,10 +60,10 @@ namespace Models.Controllers
                 var jpegImageUpload = Request.Files["Filedata"];
                 var newFolder = id;
 
-                var newPath = Path.Combine(_imageRoot, newFolder);
+                var newPath = Path.Combine(_imageRoot, c, newFolder);
                 Directory.CreateDirectory(newPath);
 
-                var newPathThumbs = Path.Combine(newPath, "thumbnails");
+                var newPathThumbs = Path.Combine(newPath, c, "thumbnails");
                 Directory.CreateDirectory(newPathThumbs);
 
                 newPath = string.Format("{0}\\", newPath);
@@ -103,7 +111,20 @@ namespace Models.Controllers
                 graphic.InterpolationMode = InterpolationMode.HighQualityBicubic; /* new way */
                 graphic.DrawImage(originalImage, pasteX, pasteY, newWidth, newHeight);
 
+                // Store the data in my custom Thumbnail object
+			    ms = new MemoryStream();
+                string thumbnail_id = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                
                 thumbnailImage.Save(imgPathThumb, ImageFormat.Jpeg);
+                thumbnailImage.Save(ms, ImageFormat.Jpeg);
+			    var thumb = new Thumbnail(thumbnail_id, ms.GetBuffer());
+                List<Thumbnail> thumbnails = Session["file_info"] as List<Thumbnail>;
+			    if (thumbnails == null)
+			    {
+				    thumbnails = new List<Thumbnail>();
+				    Session["file_info"] = thumbnails;
+			    }
+			    thumbnails.Add(thumb);
 
 
                 if (width > height)
@@ -123,9 +144,9 @@ namespace Models.Controllers
                 graphic.DrawImage(originalImage, 0, 0, newWidth, newHeight);
                 finalImage.Save(imgPath, ImageFormat.Jpeg);
                 TextFile.CreateFile(imgPath + ".txt");
-                
+
                 Response.StatusCode = 200;
-                Response.Write("ok");
+			    Response.Write(thumbnail_id);
 
             }
             catch(Exception ex)
@@ -159,14 +180,15 @@ namespace Models.Controllers
         }
 
         [WebMethod]
-        public void DeleteDay(string day, string name)
+        public void DeleteDay(string day, string name, string category)
         {
-            var imageRoot = _imageRoot + day + "\\";
+            var path = string.Format("{0}{1}\\{2}\\", _imageRoot, category, day);
             name = name.Replace("_____", ".");
-            TextFile.DeleteFile(imageRoot + name + ".txt");
-            System.IO.File.Delete(imageRoot + name);
-            System.IO.File.Delete(imageRoot + "thumbnails\\" + name);
+            TextFile.DeleteFile(path + name + ".txt");
+            System.IO.File.Delete(path + name);
+            System.IO.File.Delete(path + "thumbnails\\" + name);
         }
+
 
     }
 }

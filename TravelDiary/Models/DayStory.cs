@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using Diary.Models.Files;
 
 namespace Diary.Models
 {
@@ -14,53 +16,71 @@ namespace Diary.Models
         public string Header { get; set; }
         public string Img { get; set; }
         public string Text { get; set; }
+        public string Category { get; set; }
         
         public List<Image> Images  { get; set; }
         public List<Reply> Comments  { get; set; }
 
         //toDo: Exclude data to ext ilayer and dal-class
 
-        public static DayStory GetSingleDay(string date)
+        public static DayStory GetSingleDay(BasePath b)
         {
-            DayStory d = null;
             try {
-                var sPath = AppDomain.CurrentDomain.BaseDirectory + "Upload\\" + date;
-                var diaryText = TextFile.ReadFileWithoutEncoding(sPath + "\\main.txt");
-                var header = diaryText.Substring(4, diaryText.IndexOf("-->") - 4);
-                var im = Image.GetAllImages(sPath, date)[0].Url;
+                var d = new DayStory();
+                var date = b.Date;
+                d.Day = date;
+                string sPath = String.Concat(b.Path, b.Category, "\\", b.Date + "\\");
+                d.Text = TextFile.ReadFileWithoutEncoding(sPath + "main.txt");
+                d.Header = TextFile.ReadFileWithoutEncoding(sPath + "header.txt");
+                d.Category = TextFile.ReadFileWithoutEncoding(sPath + "category.txt");
+                d.Comments = Reply.GetReplies(sPath);
+                if (Image.GetAllImages(b).Count > 0) {
+                    d.Img = Image.GetAllImages(b)[0].Url;
+                    d.Images = Image.GetAllImages(b);
+                }
+                return d;
                 //diaryText = diaryText.Replace("\r\n", "<br>").Replace("\r", "<br>").Replace("\n", "<br>");
-                d = new DayStory {Header = header, Day = date, Img = im, Text = diaryText, Comments = Reply.GetReplies(sPath), Images = Image.GetAllImages(sPath, date)};
             }
             catch (Exception ex) {
                 return null;
-                throw ex;
+                //throw ex;
             }
-            return d;
         }
 
-        public List<DayStory> GetAllDays()
+        public List<DayStory> GetAllDays(string cat)
         {
+            var sPath = ConfigurationManager.AppSettings["UploadUrl"]  + cat + "\\";
+            
             var stories = new List<DayStory>();
-            var sPath = AppDomain.CurrentDomain.BaseDirectory + "Upload";
             var dirs = new DirectoryInfo(sPath);
             var comparer = new myReverserClass();
             DirectoryInfo[] fldrs = dirs.GetDirectories();
             Array.Sort(fldrs, comparer);
             foreach (var dirInfo in fldrs) {
-                var d = GetSingleDay(dirInfo.Name);
-                stories.Add(d);
+                var b = new BasePath(){Date = dirInfo.Name, Category = cat};
+                var d = GetSingleDay(b);
+                    stories.Add(d);
             }
             return stories;
         }
 
         public static void Save(DayStory d)
         {
-            var sPath = AppDomain.CurrentDomain.BaseDirectory + "Upload\\" + d.Day;
+            if (d.Category.Length == 0)
+                d.Category = "main";
+
+            var sPath = ConfigurationManager.AppSettings["UploadUrl"] + d.Category + "\\" + d.Day;
             Directory.CreateDirectory(sPath);
             Directory.CreateDirectory(sPath+"\\thumbnails");
-            sPath += "\\main.txt";
-            TextFile.CreateFile(sPath);
-            TextFile.AppendToFile(sPath, d.Text);
+            
+            TextFile.CreateFile(sPath + "\\main.txt");
+            TextFile.AppendToFile(sPath + "\\main.txt", d.Text);
+            
+            TextFile.CreateFile(sPath + "\\header.txt");
+            TextFile.AppendToFile(sPath + "\\header.txt", d.Header);
+            
+            TextFile.CreateFile(sPath + "\\category.txt");
+            TextFile.AppendToFile(sPath + "\\category.txt", d.Category);
         }
        
     }

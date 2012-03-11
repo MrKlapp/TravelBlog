@@ -33,6 +33,14 @@
      <form  method="post" action="/Day/SaveDay" class="well" style="height:300px;">
         <div class="clearfix" style="float:left;"><label style="text-align:left;">Datum<input type="text" name="day" id="datepicker" value="@Html.DisplayFor(model => item.Day)" class="input-small" /></label></div>
         <div class="clearfix" style="float:left;"><label style="text-align:left;">Rubrik<input type="text" value="@Html.DisplayFor(model => item.Header)" name="header" class="input-xlarge" id="header" /></label></div>
+        <div class="clearfix" style="float:left;padding-left: 20px;">
+              <label class="radio" style="text-align:left;">
+                <input type="radio" name="category" id="optionsRadios1" value="main" /> Thailand
+              </label>
+              <label class="radio" style="text-align:left;">
+                <input type="radio" name="category" id="optionsRadios2" value="noel" /> Noels Hörna
+              </label>
+            </div>
         <br />
         <textarea name="body" style="width:500px;height:200px;" id="body">@Html.Raw(HttpUtility.HtmlDecode(item.Text))</textarea>
         <br />

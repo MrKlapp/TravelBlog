@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Diary.Models.Files;
 
 namespace Diary.Models
 {
@@ -15,21 +16,21 @@ namespace Diary.Models
         public string Thumb { get; set; }
         public string Comment { get; set; }
 
-        public static List<Image> GetAllImages(string sPath, string date)
+        public static List<Image> GetAllImages(BasePath b)
         {
             var l = new List<Image>();
-            var dir = new DirectoryInfo(sPath);
+            var dir = new DirectoryInfo(String.Concat(b.Path, b.Category, "\\", b.Date + "\\"));
             foreach (var fileInfo in dir.GetFiles())
             {
                 if (fileInfo.Extension.ToLower() != ".jpg") continue;
-                var fullPath = fileInfo.FullName.Replace(".jpg", "") + ".txt";
-                var imageComment = TextFile.ReadFileWithoutEncoding(fullPath);
+
+                var imageComment = TextFile.ReadFileWithoutEncoding(fileInfo.FullName + ".txt");
 
                 var img = new Image
                           {
                               Name = fileInfo.Name.Replace(".","_____"),
-                                  Url = "../../Upload/" + date + "/" + fileInfo.Name,
-                                  Thumb = "../../Upload/" + date + "/thumbnails/" + fileInfo.Name,
+                                  Url = "/Upload/" + b.Category + "/" + b.Date + "/" + fileInfo.Name,
+                                  Thumb = "/Upload/" + b.Category + "/" + b.Date + "/thumbnails/" + fileInfo.Name,
                                   Comment = imageComment
                               };
                 l.Add(img);

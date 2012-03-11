@@ -44,7 +44,7 @@
                     @Html.DisplayFor(modelItem => cmt.DateStamp)
                 </div>        
             }
-              <form class="form-stacked" method="post" action="Reply/Save">
+              <form class="form-stacked" method="post" action="/Home/ReplySave/@item.Category/@item.Day">
                 <div class="content-addcomment"> 
                         <table>
                             <tr>
@@ -53,7 +53,7 @@
                             <tr>
                                 <td style="vertical-align:text-top;"><div class="clearfix" style="float:left;"><input type="text" value="Ditt namn..." name="from" id="from" /></div>
                                 <div class="actions"><button class="btn">Spara</button></div>
-                                <input type="hidden" name="day" value="@day" /></td>
+                                <input type="hidden" name="day" value="@item.Day" /><input type="hidden" name="category" value="@item.Category" /></td>
                             </tr>
                         </table>
                 </div>

@@ -1,9 +1,8 @@
-﻿@model IEnumerable<Diary.Models.DayStory>
-
+﻿
 @{
-    ViewBag.Title = "List";
+   
     int counter = 1;
-    
+    int subcounter = 1;
     //http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/stepping-out-with-bootstrap-from-twitter/
 }
 
@@ -11,40 +10,103 @@
     $(document).ready(function () {
         $('.linkBox').toggle(
            function () {
-            var dateId = $(this).children(".sDate").html();
-            $(this).next("div").show("fast");
-            $(this).next(".subContent").load("/home/Details/" + dateId);
-        }, function() {
-            $(this).next("div").hide("slow");
-      });
+               var id = $(this).children(".id").val();
+               var dateId = $("#sDate" + id).html();
+               var tpe = $("#type" + id).val();
+               //$("#div" + id).show("fast");
+               $(this).next("div").show("fast");
+               $.post('/Home/Details/', { Date: dateId, Category: tpe }, function (data) {
+                   $('#content' + id).html(data);
+               });
+           }, function () {
+               //$("#div" + id).hide("slow");
+               $(this).next("div").hide("slow");
+           });
 
-    
+
         $('.selectorClass').hover(function () {
-	        $(this).stop().fadeTo('fast', 0.4);
-	    }, function () {
-	        $(this).stop().fadeTo('slow', 1);
-	    });
+            $(this).stop().fadeTo('fast', 0.4);
+        }, function () {
+            $(this).stop().fadeTo('slow', 1);
+        });
+
+
+        var col1 = $("input[name='main']:first").val();
+        var col2 = $("input[name='noel']:first").val();
+        showDiv(col1);
+        showDiv(col2);
+
+        function showDiv(id) {
+            var dateId = $("#sDate" + id).html();
+            var tpe = $("#type" + id).val();
+            //$("#div" + id).show("fast");
+            $.post('/Home/Details/', { Date: dateId, Category: tpe }, function (data) {
+                $('#content' + id).html(data);
+                $("#content" + id).show("fast");
+            });
+        }
+
     });
     
 </script>
 <div class="row-fluid show-grid">
-
     <div class="span7 mainContent">
-        @foreach (var item in Model) {
-            var divId = "content" + @counter;
-            var itemId = @Html.DisplayFor(model => item.Day);
-                <div class="selectorClass linkBox boxStyle"><span class="sImg"><img src="@Html.DisplayFor(model => item.Img)" class="tinyImg rounded-corners5" alt="" /></span> <span class="sDate">@Html.DisplayFor(model => item.Day)</span><span class="sHeader">, @Html.DisplayFor(model => item.Header)</span></div>
-                <div class="subContent rounded-corners10 mainwrapper" style="display:none;"></div>
-            counter ++;
+    @{
+     var days = new Diary.Models.DayStory().GetAllDays("main");;
+      subcounter = 1;
         }
-    </div>
+        @foreach (var item in days) {
+                var divId = "content" + @counter;
+                var typeId = "type" + @counter;
+                var dateId = "sDate" + @counter;
+                var rowNo = "rowNo" + subcounter;
+                var itemId = @item.Day;
+                    <div class="selectorClass linkBox boxStyle @rowNo">
+                    <input type="hidden" class="id" name="main" value="@counter" />
+                    <input type="hidden" class="type" id="@typeId" value="main" />
+                     <table width="100%">
+                        <tr>
+                            <td align="left" style="padding-left:200px;margin-left:200px;text-align:left;">
+                                <span class="sImg"><img src="@item.Img" class="tinyImg rounded-corners5" alt="" /></span> 
+                                <span id="@dateId" class="sDate">@Html.DisplayFor(model => item.Day)</span>
+                                <span class="sHeader">, @Html.DisplayFor(model => item.Header)</span>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    
+                <div class="subContent rounded-corners10 mainwrapper" id="@divId" style="display:none;"></div>
+                counter ++;
+                subcounter ++;
+        }
+    </div>  
     <div class="span4 mainContent">
-        @foreach (var item in Model) {
-            var divId = "content" + @counter;
-            var itemId = @Html.DisplayFor(model => item.Day);
-                <div class="selectorClass linkBox boxStyle2"><span class="sImg"><img src="@Html.DisplayFor(model => item.Img)" class="tinyImg rounded-corners5" alt="" /></span> <span class="sDate">@Html.DisplayFor(model => item.Day)</span><span class="sHeader">, @Html.DisplayFor(model => item.Header)</span></div>
-                <div class="subContent rounded-corners10 mainwrapper" style="display:none;"></div>
-            counter ++;
+    @{
+      days = new Diary.Models.DayStory().GetAllDays("noel");
+      subcounter = 1;
+        }
+        @foreach (var item in days) {
+                var divId = "content" + @counter;
+                var typeId = "type" + @counter;
+                var dateId = "sDate" + @counter;
+                var rowNo = "rowNo" + subcounter;
+                var itemId = @item.Day; 
+                    <div class="selectorClass linkBox boxStyle2 @rowNo">
+                    <input type="hidden" class="id" name="noel" value="@counter" />
+                    <input type="hidden" class="type" id="@typeId" value="noel" />
+                    <table width="100%">
+                        <tr>
+                            <td align="left" style="padding-left:90px;margin-left:90px;text-align:left;">
+                                <span class="sImg"><img src="@item.Img" class="tinyImg rounded-corners5" alt="" /></span> 
+                                <span id="@dateId" class="sDate">@Html.DisplayFor(model => item.Day)</span>
+                                <span class="sHeader">, @Html.DisplayFor(model => item.Header)</span>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class="subContent rounded-corners10 mainwrapper" id="@divId" style="display:none;"></div>
+                counter ++;
+                subcounter ++;
         }
     </div>
 </div>

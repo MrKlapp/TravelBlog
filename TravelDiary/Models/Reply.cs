@@ -32,7 +32,7 @@ namespace Diary.Models
             return l;
         }
 
-        public void Create(string comment, string from, string day)
+        public void Create(string comment, string from, string day, string category)
         {
             var text = comment.Replace(Environment.NewLine, "<br />");
             text += "<br />Från: " + from;
@@ -40,7 +40,7 @@ namespace Diary.Models
             var time = DateTime.Now.ToShortTimeString();
             var date = DateTime.Now.ToShortDateString();
             var fileName = "comment_"+date + " " + time.Replace(":",".") + ".txt";
-            var sPath = AppDomain.CurrentDomain.BaseDirectory + "Upload\\" + day;
+            var sPath = AppDomain.CurrentDomain.BaseDirectory + "Upload\\" + category + "\\" + day;
             var fileUrl = sPath + "\\" + fileName;
             TextFile.CreateFile(fileUrl);
             TextFile.AppendToFile(fileUrl, text);
