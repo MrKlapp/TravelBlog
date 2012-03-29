@@ -46,7 +46,7 @@ namespace Diary.Controllers
             var d = new DayStory();
             if (b.Date == null) {
                 d.Day = DateTime.Now.ToShortDateString();
-                d.Category = "main";
+                //d.Category = "main";
             }
             else {
                 d = DayStory.GetSingleDay(b);

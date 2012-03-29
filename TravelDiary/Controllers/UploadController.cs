@@ -39,7 +39,7 @@ namespace Models.Controllers
                 return View("Day", d);
             }
 
-        public ActionResult UploadFile()
+        public void UploadFile()
         {
             Image thumbnailImage = null;
             Image originalImage = null;
@@ -51,7 +51,7 @@ namespace Models.Controllers
             var id = Request["day"];
 
             if (id.Length == 0) {
-                return Redirect("/Home/Day/"+ DateTime.Now.ToShortDateString());
+                //Redirect("/Home/Day/"+ DateTime.Now.ToShortDateString());
             }
 
             try
@@ -168,7 +168,7 @@ namespace Models.Controllers
                 Response.End();
             }
 
-            return View();
+            //return Redirect("/Home/Upload/"+c+"/"+id);
         }
 
         private void UpdateCommentFile(string file, string text)

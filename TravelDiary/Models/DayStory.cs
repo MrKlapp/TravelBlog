@@ -91,7 +91,7 @@ namespace Diary.Models
             var info1 = (DirectoryInfo) o1;
             var info2 = (DirectoryInfo) o2;
 
-            return DateTime.Compare(info2.CreationTime,info1.CreationTime);
+            return string.Compare(info2.Name,info1.Name);
             }
         }
 
